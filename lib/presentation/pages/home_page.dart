@@ -7,6 +7,7 @@ import 'package:weather_app/bussiness_logic/bloc/location_bloc.dart';
 import 'package:weather_app/presentation/pages/result_page.dart';
 import 'package:weather_app/presentation/pages/select_page.dart';
 import 'package:weather_app/presentation/widgets/app_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: defaultAppbar("Simple Weather Demo"),
+        appBar: defaultAppbar("Simple Weather App"),
         body: SingleChildScrollView(
           child: BlocListener<ConnectionBloc, ConnectionAppState>(
             listener: (context, state) {
@@ -52,10 +53,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100),
+                SizedBox(height: 100.h),
                 CachedNetworkImage(
-                  width: 150,
-                  height: 150,
+                  width: 150.w,
+                  height: 150.w,
                   imageUrl:
                       "https://png.pngtree.com/png-vector/20190629/ourmid/pngtree-sun-icon-design-png-image_1518941.jpg",
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -82,8 +83,8 @@ class _HomePageState extends State<HomePage> {
                           await navigateToSelectPage('country', "");
                     },
                     child: Container(
-                      padding: EdgeInsets.all(20),
-                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
+                      margin: EdgeInsets.only(top: 10.h),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.blue),
@@ -116,8 +117,8 @@ class _HomePageState extends State<HomePage> {
                             await navigateToSelectPage('city', selectedCountry);
                     },
                     child: Container(
-                      padding: EdgeInsets.all(20),
-                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
+                      margin: EdgeInsets.only(top: 10.h),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: Colors.blue)),
@@ -143,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
+                    padding: EdgeInsets.only(top: 10.h),
                     child: OutlinedButton(
                       onPressed: () {
                         if (selectedCity != "") {

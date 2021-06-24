@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/bussiness_logic/bloc/weather_bloc.dart';
+import 'package:weather_app/presentation/themes/style.dart';
 import 'package:weather_app/presentation/widgets/app_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResultPage extends StatefulWidget {
   final String city;
@@ -39,18 +41,11 @@ class _ResultPageState extends State<ResultPage> {
                   children: [
                     Text(
                       widget.city,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: myTextTheme.headline4,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     Text(
                       state.weatherModel.main.temp.toString() + " Kelvin(K)",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                      ),
                       textAlign: TextAlign.center,
                     ),
                     Row(
@@ -67,13 +62,9 @@ class _ResultPageState extends State<ResultPage> {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                         ),
-                        SizedBox(width: 5),
+                        SizedBox(width: 5.w),
                         Text(
                           state.weatherModel.weather[0].description.toString(),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/bussiness_logic/bloc/city_bloc.dart';
 import 'package:weather_app/bussiness_logic/bloc/location_bloc.dart';
 import 'package:weather_app/presentation/widgets/app_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectPage extends StatefulWidget {
   final String title;
@@ -70,7 +71,7 @@ class _SelectPageState extends State<SelectPage> {
       child: Scaffold(
         appBar: defaultAppbar('Select ' + widget.title),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.fromLTRB(8.w, 8.h, 8.w, 8.h),
           child: (widget.selectedCountry == "")
               ? BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, state) {
@@ -138,11 +139,11 @@ class _SelectPageState extends State<SelectPage> {
 
     return Expanded(
       child: Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: 10.h),
         child: ListView.builder(
           itemCount: location.length,
           itemBuilder: (context, index) => Container(
-            margin: EdgeInsets.only(top: 5, bottom: 5),
+            margin: EdgeInsets.symmetric(vertical: 5.h),
             child: ListTile(
               onTap: () {
                 selectedLocation = location[index];
