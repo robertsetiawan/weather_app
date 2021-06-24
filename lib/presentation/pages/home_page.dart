@@ -14,149 +14,162 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String selectedCountry;
+  late String selectedCountry;
 
-  String selectedCity;
+  late String selectedCity;
 
   Future<String> navigateToSelectPage(
       String title, String selectedCountry) async {
     String selectedLocation = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => SelectPage(
-                  title: title,
-                  selectedCountry: selectedCountry,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => SelectPage(
+          title: title,
+          selectedCountry: selectedCountry,
+        ),
+      ),
+    );
     return selectedLocation;
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: defaultAppbar("Simple Weather Demo"),
-            body: SingleChildScrollView(
-                child: BlocListener<ConnectionBloc, ConnectionAppState>(
-                    listener: (context, state) {
-                      if (!state.isConnected) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("No Connection"),
-                            duration: Duration(days: 1)));
-                      } else {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      }
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: defaultAppbar("Simple Weather Demo"),
+        body: SingleChildScrollView(
+          child: BlocListener<ConnectionBloc, ConnectionAppState>(
+            listener: (context, state) {
+              if (!state.isConnected) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("No Connection"),
+                    duration: Duration(days: 1)));
+              } else {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              }
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 100),
+                CachedNetworkImage(
+                  width: 150,
+                  height: 150,
+                  imageUrl:
+                      "https://png.pngtree.com/png-vector/20190629/ourmid/pngtree-sun-icon-design-png-image_1518941.jpg",
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Transform.scale(
+                    scale: 0.5,
+                    child: CircularProgressIndicator(
+                      value: downloadProgress.progress,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      BlocProvider.of<LocationBloc>(context)
+                          .add(LocationClearCountry());
+                      BlocProvider.of<CityBloc>(context)
+                          .add(LocationClearCity());
+
+                      selectedCity = "";
+                      selectedCountry = "";
+
+                      selectedCountry =
+                          await navigateToSelectPage('country', "");
                     },
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 100),
-                          CachedNetworkImage(
-                            width: 150,
-                            height: 150,
-                            imageUrl:
-                                "https://png.pngtree.com/png-vector/20190629/ourmid/pngtree-sun-icon-design-png-image_1518941.jpg",
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    Transform.scale(
-                                        scale: 0.5,
-                                        child: CircularProgressIndicator(
-                                            value: downloadProgress.progress)),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                          Center(
-                            child: GestureDetector(
-                                onTap: () async {
-                                  BlocProvider.of<LocationBloc>(context)
-                                      .add(LocationClearCountry());
-                                  BlocProvider.of<CityBloc>(context)
-                                      .add(LocationClearCity());
-
-                                  selectedCity = null;
-                                  selectedCountry = null;
-
-                                  selectedCountry = await navigateToSelectPage(
-                                      'country', null);
-                                },
-                                child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    margin: EdgeInsets.only(top: 10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(color: Colors.blue)),
-                                    child: BlocBuilder<LocationBloc,
-                                        LocationState>(
-                                      builder: (context, state) {
-                                        if (state is LocationSelectedCountry) {
-                                          return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(state.selectedCountry,
-                                                    textAlign: TextAlign.center)
-                                              ]);
-                                        }
-                                        selectedCountry = null;
-                                        return Text("Click to select country");
-                                      },
-                                    ))),
-                          ),
-                          Center(
-                            child: GestureDetector(
-                              onTap: () async {
-                                if (selectedCountry != null &&
-                                    selectedCountry != "")
-                                  selectedCity = await navigateToSelectPage(
-                                      'city', selectedCountry);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(20),
-                                margin: EdgeInsets.only(top: 10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: Colors.blue)),
-                                child: BlocBuilder<CityBloc, CityState>(
-                                  builder: (context, state) {
-                                    if (state is LocationSelectedCity) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(state.selectedCity,
-                                              textAlign: TextAlign.center)
-                                        ],
-                                      );
-                                    }
-                                    selectedCity = null;
-                                    return Text("Click to select city");
-                                  },
-                                ),
-                              ),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      margin: EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.blue),
+                      ),
+                      child: BlocBuilder<LocationBloc, LocationState>(
+                        builder: (context, state) {
+                          if (state is LocationSelectedCountry) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  state.selectedCountry,
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            );
+                          }
+                          selectedCountry = "";
+                          return Text("Click to select country");
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (selectedCountry != "")
+                        selectedCity =
+                            await navigateToSelectPage('city', selectedCountry);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      margin: EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.blue)),
+                      child: BlocBuilder<CityBloc, CityState>(
+                        builder: (context, state) {
+                          if (state is LocationSelectedCity) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  state.selectedCity,
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            );
+                          }
+                          selectedCity = "";
+                          return Text("Click to select city");
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: OutlinedButton(
+                      onPressed: () {
+                        if (selectedCity != "") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ResultPage(city: selectedCity),
                             ),
-                          ),
-                          Center(
-                              child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  if (selectedCity != null &&
-                                      selectedCountry != null) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => ResultPage(
-                                                city:
-                                                    selectedCity.toString())));
+                          );
 
-                                    BlocProvider.of<LocationBloc>(context)
-                                        .add(LocationClearCountry());
-                                    BlocProvider.of<CityBloc>(context)
-                                        .add(LocationClearCity());
-                                  }
-                                },
-                                child: Text("Search Location")),
-                          ))
-                        ])))));
+                          BlocProvider.of<LocationBloc>(context)
+                              .add(LocationClearCountry());
+                          BlocProvider.of<CityBloc>(context)
+                              .add(LocationClearCity());
+                        }
+                      },
+                      child: Text("Search Location"),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

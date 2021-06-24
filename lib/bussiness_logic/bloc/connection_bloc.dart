@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 
 part 'connection_event.dart';
-part 'connection_state.dart';
+part 'connection_app_state.dart';
 
 class ConnectionBloc extends Bloc<ConnectionEvent, ConnectionAppState> {
   ConnectionBloc() : super(ConnectionInitial());

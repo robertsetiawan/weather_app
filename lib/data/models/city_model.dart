@@ -7,7 +7,8 @@ class CityModel {
 
   Future<List<String>> getCity(String country) async {
     await Future.delayed(Duration(milliseconds: 500));
-    return listCity['$country'];
+    List<String> city = listCity['$country']!.toList();
+    return city;
   }
 
   Map<String, List<String>> listCity = {

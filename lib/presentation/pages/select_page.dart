@@ -9,7 +9,8 @@ class SelectPage extends StatefulWidget {
 
   final String selectedCountry;
 
-  const SelectPage({Key key, this.title, this.selectedCountry})
+  const SelectPage(
+      {Key? key, required this.title, required this.selectedCountry})
       : super(key: key);
   @override
   _SelectPageState createState() => _SelectPageState();
@@ -18,9 +19,9 @@ class SelectPage extends StatefulWidget {
 class _SelectPageState extends State<SelectPage> {
   TextEditingController selectController = new TextEditingController();
 
-  LocationBloc locationBloc;
+  late LocationBloc locationBloc;
 
-  CityBloc cityBloc;
+  late CityBloc cityBloc;
 
   List<String> searchResult = [];
 
@@ -35,7 +36,7 @@ class _SelectPageState extends State<SelectPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.selectedCountry == null || widget.selectedCountry == "") {
+    if (widget.selectedCountry == "") {
       locationBloc = BlocProvider.of<LocationBloc>(context);
 
       locationBloc.add(LocationLoadCountry());
@@ -66,12 +67,11 @@ class _SelectPageState extends State<SelectPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      appBar: defaultAppbar('Select ' + widget.title),
-      body: Padding(
+      child: Scaffold(
+        appBar: defaultAppbar('Select ' + widget.title),
+        body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: (widget.selectedCountry == null ||
-                  widget.selectedCountry == "")
+          child: (widget.selectedCountry == "")
               ? BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, state) {
                     if (state is LocationLoadedCountry) {
@@ -82,8 +82,9 @@ class _SelectPageState extends State<SelectPage> {
                             onChanged: searchOperation,
                             controller: selectController,
                             decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Enter a ' + widget.title + ' name'),
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter a ' + widget.title + ' name',
+                            ),
                           ),
                           (searchResult.length != 0 &&
                                   selectController.text.isNotEmpty)
@@ -109,8 +110,9 @@ class _SelectPageState extends State<SelectPage> {
                             onChanged: searchOperation,
                             controller: selectController,
                             decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Enter a ' + widget.title + ' name'),
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter a ' + widget.title + ' name',
+                            ),
                           ),
                           (searchResult.length != 0 &&
                                   selectController.text.isNotEmpty)
@@ -125,34 +127,40 @@ class _SelectPageState extends State<SelectPage> {
                     }
                     return Container();
                   },
-                )),
-    ));
+                ),
+        ),
+      ),
+    );
   }
 
   Widget buildQuery(List<String> location) {
     String selectedLocation;
 
     return Expanded(
-        child: Container(
-            margin: EdgeInsets.only(top: 10),
-            child: ListView.builder(
-              itemCount: location.length,
-              itemBuilder: (context, index) => Container(
-                  margin: EdgeInsets.only(top: 5, bottom: 5),
-                  child: ListTile(
-                      onTap: () {
-                        selectedLocation = location[index];
-                        Navigator.pop(context, selectedLocation);
+      child: Container(
+        margin: EdgeInsets.only(top: 10),
+        child: ListView.builder(
+          itemCount: location.length,
+          itemBuilder: (context, index) => Container(
+            margin: EdgeInsets.only(top: 5, bottom: 5),
+            child: ListTile(
+              onTap: () {
+                selectedLocation = location[index];
+                Navigator.pop(context, selectedLocation);
 
-                        if (widget.selectedCountry == null ||
-                            widget.selectedCountry == "") {
-                          locationBloc
-                              .add(LocationSelectCountry(selectedLocation));
-                        } else {
-                          cityBloc.add(LocationSelectCity(selectedLocation));
-                        }
-                      },
-                      title: Text(location[index].toString()))),
-            )));
+                if (widget.selectedCountry == "") {
+                  locationBloc.add(LocationSelectCountry(selectedLocation));
+                } else {
+                  cityBloc.add(LocationSelectCity(selectedLocation));
+                }
+              },
+              title: Text(
+                location[index].toString(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

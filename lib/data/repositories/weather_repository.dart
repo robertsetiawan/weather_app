@@ -5,17 +5,17 @@ import 'dart:convert';
 class WeatherRepository {
   Future<WeatherModel> getWeatherInfo(String city) async {
     // TODO: add API KEY here
-    var apiKey = '';
+    final String apiKey = '';
 
-    var url = Uri.parse('http://api.openweathermap.org/data/2.5/weather?q=' +
+    final url = Uri.parse('http://api.openweathermap.org/data/2.5/weather?q=' +
         city +
         '&appid=' +
-        apiKey.toString());
+        apiKey);
 
     final response = await http.get(url);
 
     Map<String, dynamic> parsedJson = json.decode(response.body);
-    
+
     if (response.statusCode == 200) {
       return WeatherModel.fromJson(parsedJson);
     } else {

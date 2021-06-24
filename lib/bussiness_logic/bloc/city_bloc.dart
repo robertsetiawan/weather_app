@@ -16,17 +16,16 @@ class CityBloc extends Bloc<CityEvent, CityState> {
   Stream<CityState> mapEventToState(
     CityEvent event,
   ) async* {
-    if (event is LocationLoadCity){
-      yield * mapLocationLoadCitryToState(event);
-    } else if (event is LocationSelectCity){
+    if (event is LocationLoadCity) {
+      yield* mapLocationLoadCitryToState(event);
+    } else if (event is LocationSelectCity) {
       yield LocationSelectedCity(event.selectedCity);
-    } else if (event is LocationClearCity){
+    } else if (event is LocationClearCity) {
       yield CityInitial();
     }
   }
 
-  Stream<CityState> mapLocationLoadCitryToState(
-      LocationLoadCity event) async* {
+  Stream<CityState> mapLocationLoadCitryToState(LocationLoadCity event) async* {
     yield CityLoading();
 
     try {
