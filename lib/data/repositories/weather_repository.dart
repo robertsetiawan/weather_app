@@ -7,7 +7,7 @@ class WeatherRepository {
     // TODO: add API KEY here
     final String apiKey = '';
 
-    final url = Uri.parse('http://api.openweathermap.org/data/2.5/weather?q=' +
+    final url = Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=' +
         city +
         '&appid=' +
         apiKey);
